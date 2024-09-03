@@ -6,12 +6,11 @@ class OrdersController < ApplicationController
   # GET /orders
   def index
     @orders = current_user.orders if user_signed_in?
-    @products = Product.all
   end
 
   # GET /orders/:id
   def show
-    #
+    # @order is set by the set_order before_action
   end
 
   # POST /orders
