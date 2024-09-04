@@ -3,6 +3,7 @@ class CartItem < ApplicationRecord
   belongs_to :cart
   validates :quantity, numericality: { greater_than: 0 }
   after_initialize :set_default, if: :new_record?
+
   def total_price
     quantity * product.price
   end

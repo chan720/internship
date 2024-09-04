@@ -2,6 +2,14 @@
 
 # Version of your assets, change this if you want to expire all your assets.
 Rails.application.config.assets.version = "1.0"
+# config/initializers/assets.rb
+
+# Add node_modules to the asset path
+Rails.application.config.assets.paths << Rails.root.join("node_modules")
+
+# Precompile additional assets including Tailwind CSS
+Rails.application.config.assets.precompile += %w[ application.tailwind.css ]
+
 
 # Add additional assets to the asset load path.
 # Rails.application.config.assets.paths << Emoji.images_path

@@ -1,11 +1,13 @@
 ActiveAdmin.register Product do
-  permit_params :name, :description, :price, :stock, :category_id
+  permit_params :name, :description, :price, :stock, :category_id, :url
   index do
     selectable_column
     id_column
     column :name
     column :description
     column :price
+    column :stock
+    column :url
     column :created_at
     actions
   end
@@ -22,6 +24,7 @@ ActiveAdmin.register Product do
       f.input :price
       f.input :stock
       f.input :category
+      f.input :url
     end
     f.actions
   end
