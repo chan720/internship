@@ -1,25 +1,21 @@
 <!-- app/views/products/index.html.erb -->
 <%= stylesheet_link_tag 'application.tailwind', media: 'all', 'data-turbo-track': 'reload' %>
-
-
-<div class="container mx-auto px-4 py-8 bg-blue-500 text-white text-center p-4">
-  <h1 class="text-3xl font-bold text-center mb-8">Our Products</h1>
-  
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-center text-white mb-8">Our Products</h1>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
     <% @products.each do |product| %>
-      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div class="bg-grey shadow-lg rounded-lg overflow-hidden">
+        <!-- Product Image -->
         <div class="bg-gray-200 h-56 flex items-center justify-center">
-          <%= image_tag product&.url, class: "object-cover h-flex w-flex" %>
+          <%= image_tag product&.url, class: "object-cover w-full h-full" %>
         </div>
         <div class="p-4">
           <h2 class="text-xl font-bold mb-2 text-green-600"><%= product.name %></h2>
-          <p class="text-gray-700 mb-4"><%= truncate(product.description, length: 100) %></p>
+          <p class="text-gray-100 mb-4"><%= truncate(product.description, length: 100) %></p>
           <div class="text-lg font-semibold text-green-600 mb-4">$<%= product.price %></div>
-          <%# <%= link_to 'Add to Cart', cart_path(product), class: 'block text-center bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600' %> 
-          <%= link_to 'Show', product_path(product), class: 'block text-center bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600' %>
-
-        </div>
-
+          <%= link_to 'Show', product_path(product), class: 'mt-5 block text-center bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600' %>
+          <%= button_to "Checkout", checkout_create_path(id: product.id), method: :post ,class: 'mt-5 block text-center bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600' %>
+          </div>
       </div>
     <% end %>
   </div>

@@ -2,6 +2,7 @@ class CartsController < ApplicationController
   before_action :authenticate_user!
 
   def show
+    # product = Product.find(params[:id])
     @cart = current_user.cart || current_user.create_cart
     @cart_items = @cart.cart_items.includes(:product)
   end

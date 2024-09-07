@@ -1,28 +1,110 @@
-<div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-  <h1 class="text-3xl font-bold mb-4"><%= @product.name %></h1>
-
-  <p class="text-xl mb-4">
-    <strong>Price:</strong>
-    <span class="text-green-600 font-semibold"><%= number_to_currency(@product.price) %></span>
-  </p>
-
-  <p class="mb-4">
-    <strong>Description:</strong>
-    <span class="text-gray-700"><%= @product.description %></span>
-  </p>
-
-  <p class="mb-4">
-    <strong>Category:</strong>
-    <span class="text-gray-700"><%= @product.category.name if @product.category %></span>
-  </p>
-
-  <div class="flex items-center space-x-4 mt-6">
-    <%= link_to 'Back', products_path, class: 'bg-gray-500 text-white font-bold py-2 px-4 rounded hover:bg-gray-600' %>
-
-    <%= form_with(model: CartItem.new(product_id: @product.id, quantity: 1), url: cart_items_path, method: :post) do |form| %>
-      <%= form.hidden_field :product_id, value: @product.id %>
-      <%= form.hidden_field :quantity, value: 1 %>
-      <%= form.submit 'Add to Cart', class: 'bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600' %>
-    <% end %>
+<div class="container mx-auto mt-10 p-6 bg-grey shadow-lg rounded-lg">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= image_tag @product&.url, alt: @product.name, class: 'w-full h-auto object-cover rounded-lg shadow-lg' %>
+    </div>
+    <div>
+      <h1 class="text-4xl font-bold mb-4 text-gray-100"><%= @product.name %></h1>
+      <p class="text-2xl text-green-600 font-semibold mb-4">
+        <strong>Price: </strong><%= number_to_currency(@product.price) %>
+      </p>
+      <p class="mb-4 text-gray-100 leading-relaxed">
+        <strong>Description: </strong><%= @product.description %>
+      </p>
+      <p class="mb-4 text-gray-100">
+        <strong>Category: </strong>
+        <%= @product.category.name if @product.category %>
+      </p>
+        <div class="mt-6 flex space-x-4">
+          <%= form_with(model: CartItem.new(product_id: @product.id, quantity: 1), url: cart_items_path, method: :post) do |form| %>
+            <%= form.hidden_field :product_id, value: @product.id %>
+            <%= form.hidden_field :quantity, value: 1 %>
+            <%= form.submit 'Add to Cart', class: 'bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600' %>
+          <% end %>
+          <%= link_to 'Back to Products', products_path, class: 'bg-gray-500 text-white font-bold py-2 px-4 rounded hover:bg-gray-600' %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+<%# Reviews Section %>
+<section class="mt-12 bg-grey shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4 text-gray-100">Customer Reviews</h2>
+
+
+  <div class="bg-grey p-4 rounded-lg mb-6">
+    <p class="text-lg font-semibold">
+      Average Rating:
+      <% if @product.reviews.any? %>
+        <span class="text-yellow-500">
+          <%= number_with_precision(@product.reviews.average(:rating), precision: 1) %> / 5
+        </span>
+        <span class="text-gray-600">(<%= @product.reviews.count %> reviews)</span>
+      <% else %>
+        <span class="text-gray-500">No reviews yet</span>
+      <% end %>
+    </p>
+  </div>
+
+  <div class="text-center mb-6">
+    <button id="toggleReviewForm" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none">
+      Leave a Review
+    </button>
+  </div>
+
+  <div id="reviewForm" class="hidden bg-white p-6 shadow-md rounded-lg mb-8">
+  <h3 class="text-xl font-semibold mb-4 text-gray-700">Leave a Review</h3>
+
+  <%= form_with(model: [ @product, Review.new ], local: true, class: 'space-y-4') do |form| %>
+    <!-- Rating Input -->
+    <div class="flex flex-col">
+      <label for="rating" class="text-gray-700 font-semibold mb-2">Your Rating (1-5)</label>
+      <%= form.number_field :rating, min: 1, max: 5, step: 1, class: 'w-24 px-3 py-2 border border-gray-300 rounded-lg text-gray-700' %>
+    </div>
+
+    <!-- Comment Input -->
+    <div class="flex flex-col">
+      <label for="comment" class="text-gray-700 font-semibold mb-2">Your Review</label>
+      <%= form.text_area :comment, rows: 4, class: 'w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700' %>
+    </div>
+
+    <!-- Submit Button -->
+    <div>
+      <%= form.submit 'Submit Review', class: 'bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600' %>
+    </div>
+  <% end %>
+</div>
+
+  <div class="mt-8 bg-grey shadow-lg rounded-lg">
+    <h3 class="text-xl font-semibold mb-4 text-white-700">All Reviews</h3>
+    
+    <ul class="space-y-6">
+      <% if @product.reviews.any? %>
+        <% @product.reviews.each do |review| %>
+          <li class="p-6 rounded-lg shadow-md">
+            <div class="flex items-center mb-2">
+              <strong class="text-yellow-500 mr-2">Rating: <%= review.rating %> / 5</strong>
+              <span class="text-gray-100">- <%= time_ago_in_words(review.created_at) %> ago</span>
+            </div>
+            <p class="text-gray-100"><%= review.comment %></p>
+          </li>
+        <% end %>
+      <% else %>
+        <li>
+          <p class="text-gray-100">No reviews yet. Be the first to leave a review!</p>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const toggleButton = document.getElementById("toggleReviewForm");
+  const reviewForm = document.getElementById("reviewForm");
+
+  toggleButton.addEventListener("click", function() {
+    reviewForm.classList.toggle("hidden");
+  });
+});
+</script>

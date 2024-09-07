@@ -1,43 +1,85 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile - MyStore</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <!-- Container -->
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-lg">
+      
+      <!-- Store Logo -->
+      <div class="text-center">
+        <a href="/" class="text-3xl font-bold text-white">MyStore</a>
+      </div>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      <!-- Edit Profile Heading -->
+      <h2 class="mt-6 text-center text-2xl font-extrabold text-white">Edit <%= resource_name.to_s.humanize %></h2>
+
+      <!-- Devise Edit Form -->
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }, class: "mt-8 space-y-6") do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <!-- Email Field -->
+        <div class="mb-4">
+          <%= f.label :email, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-900 placeholder-gray-500 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+
+        <!-- Pending Confirmation (if applicable) -->
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div class="mb-4 text-gray-400">
+          Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+        </div>
+        <% end %>
+
+        <!-- Password Field (optional) -->
+        <div class="mb-4">
+          <%= f.label :password, class: "block text-sm font-medium text-gray-300" %> 
+          <i class="text-gray-400 text-xs">(leave blank if you don't want to change it)</i><br />
+          <%= f.password_field :password, autocomplete: "new-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-900 placeholder-gray-500 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          <% if @minimum_password_length %>
+            <em class="text-gray-400 text-xs"><%= @minimum_password_length %> characters minimum</em>
+          <% end %>
+        </div>
+
+        <!-- Password Confirmation Field -->
+        <div class="mb-4">
+          <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-300" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-900 placeholder-gray-500 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+
+        <!-- Current Password Field -->
+        <div class="mb-6">
+          <%= f.label :current_password, class: "block text-sm font-medium text-gray-300" %> 
+          <i class="text-gray-400 text-xs">(we need your current password to confirm your changes)</i><br />
+          <%= f.password_field :current_password, autocomplete: "current-password", class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-900 placeholder-gray-500 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+
+        <!-- Update Button -->
+        <div>
+          <%= f.submit "Update", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        </div>
+      <% end %>
+
+      <!-- Cancel My Account -->
+      <h3 class="mt-6 text-center text-xl font-bold text-white">Cancel my account</h3>
+      <div class="text-center text-gray-400">
+        Unhappy? 
+        <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "text-red-600 hover:text-red-400" %>
+      </div>
+
+      <!-- Back Link -->
+      <div class="mt-4 text-center">
+        <%= link_to "Back", :back, class: "text-indigo-500 hover:underline" %>
+      </div>
+
+    </div>
   </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
-    <% end %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</body>
+</html>

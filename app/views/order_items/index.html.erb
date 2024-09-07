@@ -1,0 +1,28 @@
+<h1 class="text-2xl font-bold text-gray-100 mb-5">Your Order Summary</h1>
+
+<table class="w-full border-collapse font-sans">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="border border-gray-300 px-3 py-2 text-left text-gray-800 font-semibold">Product</th>
+      <th class="border border-gray-300 px-3 py-2 text-center text-gray-800 font-semibold">Quantity</th>
+      <th class="border border-gray-300 px-3 py-2 text-right text-gray-800 font-semibold">Price</th>
+      <th class="border border-gray-300 px-3 py-2 text-right text-gray-800 font-semibold">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order_items.each do |item| %>
+      <tr class="border-b border-gray-300">
+        <td class="px-3 py-2 text-left"><%= item.product.name %></td>
+        <td class="px-3 py-2 text-center"><%= item.quantity %></td>
+        <td class="px-3 py-2 text-right"><%= number_to_currency(item.product.price) %></td>
+        <td class="px-3 py-2 text-right font-bold"><%= number_to_currency(item.quantity * item.product.price) %></td>
+      </tr>
+    <% end %>
+    <tr class="bg-gray-50">
+      <td colspan="3" class="px-3 py-2 text-right text-gray-800 font-bold">Total Amount:</td>
+      <td class="px-3 py-2 text-right font-bold text-gray-800 text-lg">
+        <%= number_to_currency(@order_items.sum { |item| item.quantity * item.product.price }) %>
+      </td>
+    </tr>
+  </tbody>
+</table>
